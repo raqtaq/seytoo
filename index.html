@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEYTOO | App Development Studio</title>
+    <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --accent: #0066ff;
+            --dark-bg: #0a0a0a;
+            --light-gray: #f5f5f7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            overflow-x: hidden;
+            color: var(--black);
+            background: var(--white);
+            line-height: 1.6;
+        }
+        
+        /* ===== Header & Navigation ===== */
+        header {
+            position: fixed;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 1000;
+            padding: 1rem 0;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 700;
+            z-index: 1002;
+            text-decoration: none;
+        }
+        
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .desktop-nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .desktop-nav a:hover {
+            color: var(--accent);
+        }
+        
+        .desktop-nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .desktop-nav a:hover::after {
+            width: 100%;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1002;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-icon {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu-icon::before,
+        .mobile-menu-icon::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu-icon::before {
+            top: -8px;
+        }
+        
+        .mobile-menu-icon::after {
+            top: 8px;
+        }
+        
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--dark-bg);
+            padding: 6rem 2rem 2rem;
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+        }
+        
+        .mobile-nav.active {
+            right: 0;
+        }
+        
+        .mobile-nav a {
+            display: block;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: color 0.3s;
+        }
+        
+        .mobile-nav a:hover {
+            color: var(--accent);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Responsive Breakpoint */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-menu-btn.active .mobile-menu-icon {
+                background: transparent;
+            }
+            
+            .mobile-menu-btn.active .mobile-menu-icon::before {
+                transform: rotate(45deg);
+                top: 0;
+            }
+            
+            .mobile-menu-btn.active .mobile-menu-icon::after {
+                transform: rotate(-45deg);
+                top: 0;
+            }
+        }
+
+        /* ===== Section Styles ===== */
+        section {
+            padding: 7rem 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Home/Hero Section */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            color: var(--white);
+            text-align: center;
+            padding-top: 5rem;
+        }
+        
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+            z-index: -2;
+        }
+        
+        #home::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        #home h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        #home p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+        
+        /* About Section */
+        #about {
+            background: var(--white);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-bg);
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: #444;
+        }
+        
+        .about-image {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Solutions Section */
+        #solutions {
+            background: var(--light-gray);
+        }
+        
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .solution-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .solution-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        /* Apps Section */
+        #apps {
+            background: var(--white);
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+        
+        .app-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .app-image {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .app-info {
+            padding: 2rem;
+        }
+        
+        .app-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .app-info p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Contact Section */
+        #contact {
+            background: var(--dark-bg);
+            color: var(--white);
+        }
+        
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .contact-info {
+            margin-bottom: 3rem;
+        }
+        
+        .contact-info p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 4px;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: var(--accent);
+            color: var(--white);
+        }
+        
+        /* Footer */
+        footer {
+            background: #050505;
+            color: #999;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-image {
+                order: -1;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #home h1 {
+                font-size: 2.8rem;
+            }
+            
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            section {
+                padding: 5rem 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            #home h1 {
+                font-size: 2.2rem;
+            }
+            
+            #home p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#home" class="logo">SEYTOO</a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#solutions">Solutions</a>
+                <a href="#apps">Apps</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" aria-label="Toggle navigation">
+                <span class="mobile-menu-icon"></span>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobileNav">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#apps">Apps</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="hero-content">
+            <h1>Build. Launch. Scale.</h1>
+            <p>We transform your app ideas into high-performance mobile experiences that users love and businesses rely on.</p>
+            <div>
+                <a href="#contact" class="btn">Get Started</a>
+                <a href="#apps" class="btn btn-outline">Our Apps</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">Who We Are</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Digital Architects Crafting Exceptional Apps</h2>
+                    <p>SEYTOO is a premier app development studio dedicated to building innovative mobile solutions that drive real business impact.</p>
+                    <p>Founded in 2023, our team combines technical expertise with creative vision to deliver apps that are not just functional, but delightful to use.</p>
+                    <p>We believe in the power of mobile technology to transform industries and create meaningful connections between businesses and their customers.</p>
+                </div>
+                <div class="about-image">
+                    <!-- Replace with your team/office image -->
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="SEYTOO team working">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions">
+        <div class="container">
+            <h2 class="section-title">Our Solutions</h2>
+            <div class="solutions-grid">
+                <div class="solution-card">
+                    <h3>Custom App Development</h3>
+                    <p>Tailored mobile solutions designed from the ground up to meet your specific business requirements and user needs.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>UI/UX Design</h3>
+                    <p>Beautiful, intuitive interfaces that enhance user engagement and drive higher conversion rates.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>App Modernization</h3>
+                    <p>Breathing new life into legacy applications with updated architectures and modern features.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>Cloud Integration</h3>
+                    <p>Seamless cloud services integration for scalable, secure backend infrastructure.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>App Analytics</h3>
+                    <p>Comprehensive tracking and insights to measure performance and guide improvements.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>Maintenance & Support</h3>
+                    <p>Ongoing care and updates to keep your app running smoothly post-launch.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apps Section -->
+    <section id="apps">
+        <div class="container">
+            <h2 class="section-title">Our Featured Apps</h2>
+            <div class="apps-grid">
+                <div class="app-card">
+                    <div class="app-image" style="background: linear-gradient(45deg, #000428, #004e92);">raQtaQ</div>
+                    <div class="app-info">
+                        <h3>raQtaQ</h3>
+                        <p>A productivity powerhouse that streamlines team collaboration with intelligent task automation and real-time synchronization.</p>
+                        <a href="#" class="btn" style="background: #004e92;">Learn More</a>
+                    </div>
+                </div>
+                <div class="app-card">
+                    <div class="app-image" style="background: linear-gradient(45deg, #11998e, #38ef7d);">Goneyi</div>
+                    <div class="app-info">
+                        <h3>Goneyi</h3>
+                        <p>AI-driven financial assistant that simplifies investing and personal wealth management with predictive analytics.</p>
+                        <a href="#" class="btn" style="background: #11998e;">Learn More</a>
+                    </div>
+                </div>
+                <div class="app-card">
+                    <div class="app-image" style="background: linear-gradient(45deg, #f46b45, #eea849);">Sunulife</div>
+                    <div class="app-info">
+                        <h3>Sunulife</h3>
+                        <p>Holistic wellness platform combining mental health tracking with personalized care plans and community support.</p>
+                        <a href="#" class="btn" style="background: #f46b45;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <p>Ready to bring your app idea to life? Contact our team today.</p>
+                    <p>Email: <a href="mailto:hello@seytoo.com" style="color: var(--accent);">hello@seytoo.com</a></p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Location: San Francisco, CA</p>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    <div class="form-group full-width" style="text-align: center;">
+                        <button type="submit" class="btn">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SEYTOO. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('overlay');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking overlay or links
+        overlay.addEventListener('click', closeMobileMenu);
+        
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+        
+        function closeMobileMenu() {
+            mobileMenuBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Close menu when resizing to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+        
+        // Form submission (placeholder)
+        const contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Thank you for your message! We will contact you soon.');
+                contactForm.reset();
+            });
+        }
+    </script>
+</body>
+</html>
